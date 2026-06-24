@@ -165,9 +165,9 @@ jobs:
           timeout: "10m"
 
  # ==============================================================
-# STAGE 5: IaC Security Scan (Checkov) — Terraform + K8s
-# ==============================================================
-iac-scan:
+ # STAGE 5: IaC Security Scan (Checkov) — Terraform + K8s
+ # ==============================================================
+ iac-scan:
   name: "🏗️ IaC Security Scan"
   runs-on: ubuntu-latest
   continue-on-error: true
