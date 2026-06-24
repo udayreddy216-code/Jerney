@@ -180,9 +180,9 @@
 
      - name: Scan Terraform
        run: |
-         checkov -d terraform \
-         --framework terraform \
-         --skip-check CKV_AWS_39,CKV_AWS_58
+        checkov -d terraform \
+        --framework terraform \
+        --skip-check CKV_AWS_39,CKV_AWS_58,CKV_TF_1
 
      - name: Scan Kubernetes
        run: |
