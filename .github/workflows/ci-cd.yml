@@ -1,26 +1,20 @@
-# ==============================================================
-# Jerney - DevSecOps CI/CD Pipeline
-# ==============================================================
-# Triggers on every push and pull request.
-# Stages: Lint → SCA → Build → Image Scan → IaC Scan → Deploy Manifest Update
-# ==============================================================
-name: Jerney DevSecOps Pipeline
-on:
-  push:
-    branches: ["*"]
-  pull_request:
-    branches: ["*"]
+ name: Jerney DevSecOps Pipeline
 
-# Security: restrict default permissions to read-only
-permissions:
-  contents: read
+ on:
+   push:
+     branches: ["*"]
+   pull_request:
+     branches: ["*"]
 
-env:
-  DOCKER_REGISTRY: ghcr.io
-  BACKEND_IMAGE: ghcr.io/${{ github.repository }}/jerney-backend
-  FRONTEND_IMAGE: ghcr.io/${{ github.repository }}/jerney-frontend
+ permissions:
+   contents: read
 
-jobs:
+ env:
+   DOCKER_REGISTRY: ghcr.io
+   BACKEND_IMAGE: ghcr.io/${{ github.repository }}/jerney-backend
+   FRONTEND_IMAGE: ghcr.io/${{ github.repository }}/jerney-frontend
+
+ jobs:
   # ==============================================================
   # STAGE 1: Linting
   # ==============================================================
@@ -162,39 +156,39 @@ jobs:
           severity: "CRITICAL,HIGH"
           timeout: "10m"
 
- # ==============================================================
- # STAGE 5: IaC Security Scan (Checkov) — Terraform + K8s
- # ==============================================================
- iac-scan:
-  name: "🏗️ IaC Security Scan"
-  runs-on: ubuntu-latest
-  continue-on-error: true
-  needs: lint
-  steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+  # ==============================================================
+  # STAGE 5: IaC Security Scan (Checkov) — Terraform + K8s
+  # ==============================================================
+  iac-scan:
+   name: "🏗️ IaC Security Scan"
+   runs-on: ubuntu-latest
+   continue-on-error: true
+   needs: lint
+   steps:
+     - name: Checkout code
+       uses: actions/checkout@v4
 
-    - name: Install Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: "3.11"
+     - name: Install Python
+       uses: actions/setup-python@v5
+       with:
+         python-version: "3.11"
 
-    - name: Install Checkov
-      run: |
-        python -m pip install --upgrade pip
-        pip install checkov
+     - name: Install Checkov
+       run: |
+         python -m pip install --upgrade pip
+         pip install checkov
 
-    - name: Scan Terraform
-      run: |
-        checkov -d terraform \
-        --framework terraform \
-        --skip-check CKV_AWS_39,CKV_AWS_58
+     - name: Scan Terraform
+       run: |
+         checkov -d terraform \
+         --framework terraform \
+         --skip-check CKV_AWS_39,CKV_AWS_58
 
-    - name: Scan Kubernetes
-      run: |
-        checkov -d k8s \
-        --framework kubernetes \
-        --soft-fail
+     - name: Scan Kubernetes
+       run: |
+         checkov -d k8s \
+         --framework kubernetes \
+         --soft-fail
 
   # ==============================================================
   # STAGE 6: Dockerfile Lint (Hadolint)
