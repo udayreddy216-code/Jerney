@@ -10,9 +10,9 @@
    contents: read
 
  env:
-   DOCKER_REGISTRY: ghcr.io
-   BACKEND_IMAGE: ghcr.io/${{ github.repository }}/jerney-backend
-   FRONTEND_IMAGE: ghcr.io/${{ github.repository }}/jerney-frontend
+  DOCKER_REGISTRY: ghcr.io
+  BACKEND_IMAGE: ghcr.io/udayreddy216-code/jerney/jerney-backend
+  FRONTEND_IMAGE: ghcr.io/udayreddy216-code/jerney/jerney-frontend
 
  jobs:
   # ==============================================================
